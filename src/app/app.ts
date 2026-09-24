@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { GalEditorComponent } from './gal-editor/gal-editor';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [GalEditorComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('gal-editor');
+  title = 'gal-editor';
 }

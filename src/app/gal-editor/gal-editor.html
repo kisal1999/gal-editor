@@ -1,0 +1,509 @@
+<div class="gal-page">
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <div class="top-bar-inner d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <img class="brand-logo" src="logos/long-logo.png" alt="SriLankan Airlines">
+                <span class="brand-divider d-none d-sm-block"></span>
+                <div class="title-block">
+                    <h1>Global Address List Editor</h1>
+                    <p>Employee Information Management</p>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="role-pill d-none d-sm-flex">
+                    <span class="dot"></span>
+                    Directory Editor
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-4">
+            <div class="hero-inner">
+                <p class="eyebrow">DIRECTORY MANAGEMENT</p>
+                <h2>Employee Profile</h2>
+                <p class="hero-sub">Manage employee contact and organizational information in the Global Address List.
+                </p>
+            </div>
+            <!-- 
+            <div class="skyline-deco d-none d-lg-block" aria-hidden="true">
+                
+            </div> -->
+        </div>
+    </section>
+
+    <!-- FORM -->
+    <form class="card-stack d-flex flex-column gap-4" (ngSubmit)="save()">
+
+        <!-- 01 EMPLOYEE INFORMATION -->
+        <div class="section-card">
+            <div class="d-flex gap-3 align-items-start">
+                <div class="icon-circle">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="header-copy">
+                    <div class="title-row"><span class="step-no">01</span>
+                        <h3>Employee Information</h3>
+                    </div>
+                    <p>Basic employee identification details</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+                <div class="col">
+                    <div class="field">
+                        <label>Staff Number <span class="req">*</span></label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-person-vcard"></i>
+                            </span>
+                            <input type="text" placeholder="Enter staff number" [ngModel]="staffNo()"
+                                (ngModelChange)="staffNo.set($event)" name="staffNo">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Last Name <span class="req">*</span></label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-person-fill"></i>
+                            </span>
+                            <input type="text" placeholder="Enter last name" [ngModel]="lastName()"
+                                (ngModelChange)="lastName.set($event)" name="lastName">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Initials</label>
+                        <div class="field-input">
+                            <span class="icon-box text-icon">Aa</span>
+                            <input type="text" placeholder="Enter initials" [ngModel]="initials()"
+                                (ngModelChange)="initials.set($event)" name="initials">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Other Names</label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-person-fill"></i>
+                            </span>
+                            <input type="text" placeholder="Enter other names" [ngModel]="otherNames()"
+                                (ngModelChange)="otherNames.set($event)" name="otherNames">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Display Name <span class="req">*</span></label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-person-fill"></i>
+                            </span>
+                            <input type="text" placeholder="Enter display name" [ngModel]="displayName()"
+                                (ngModelChange)="displayName.set($event)" name="displayName">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02 CONTACT INFORMATION -->
+        <div class="section-card">
+            <div class="d-flex gap-3 align-items-start">
+                <div class="icon-circle">
+                    <i class="bi bi-telephone"></i>
+                </div>
+                <div class="header-copy">
+                    <div class="title-row"><span class="step-no">02</span>
+                        <h3>Contact Information</h3>
+                    </div>
+                    <p>Office and personal contact details</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+                <div class="col">
+                    <div class="field">
+                        <label>Extension 1</label>
+                        <div class="field-input phone">
+                            <button type="button" class="country-select" (click)="toggleDropdown('ext1')">
+                                <img *ngIf="extension1.iso2" [src]="flagUrl(extension1.iso2)" alt="">
+                                <span class="dial">{{ extension1.code ? '+' + extension1.code : 'Code' }}</span>
+                                <i class="bi bi-chevron-down chevron-sm"
+                                    [class.rotated]="openDropdown() === 'ext1'"></i>
+                            </button>
+                            <div class="country-dropdown" *ngIf="openDropdown() === 'ext1'"
+                                (click)="$event.stopPropagation()">
+                                <div class="country-search-wrap">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="country-search-input" [ngModel]="countrySearch()"
+                                        (ngModelChange)="countrySearch.set($event)" name="search-ext1"
+                                        placeholder="Search country or code…">
+                                </div>
+                                <div class="country-list">
+                                    <div class="country-option" *ngFor="let c of filteredCountries()"
+                                        (click)="selectCountry(extension1, c)">
+                                        <img [src]="flagUrl(c.iso2)" alt="">
+                                        <span class="country-name">{{ c.name }}</span>
+                                        <span class="country-dial">+{{ c.dial }}</span>
+                                    </div>
+                                    <div class="country-empty" *ngIf="filteredCountries().length === 0">No countries
+                                        found</div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Enter extension" #ext1Input [(ngModel)]="extension1.number"
+                                name="ext1number" (ngModelChange)="onPhoneNumberInput(extension1, $event, ext1Input)">
+                        </div>
+                    </div>
+                    <p class="phone-error" *ngIf="!isPhoneValid(extension1)">Invalid number length for +{{
+                        extension1.code }}</p>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Extension 2</label>
+                        <div class="field-input phone">
+                            <button type="button" class="country-select" (click)="toggleDropdown('ext2')">
+                                <img *ngIf="extension2.iso2" [src]="flagUrl(extension2.iso2)" alt="">
+                                <span class="dial">{{ extension2.code ? '+' + extension2.code : 'Code' }}</span>
+                                <i class="bi bi-chevron-down chevron-sm"
+                                    [class.rotated]="openDropdown() === 'ext2'"></i>
+                            </button>
+                            <div class="country-dropdown" *ngIf="openDropdown() === 'ext2'"
+                                (click)="$event.stopPropagation()">
+                                <div class="country-search-wrap">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="country-search-input" [ngModel]="countrySearch()"
+                                        (ngModelChange)="countrySearch.set($event)" name="search-ext2"
+                                        placeholder="Search country or code…">
+                                </div>
+                                <div class="country-list">
+                                    <div class="country-option" *ngFor="let c of filteredCountries()"
+                                        (click)="selectCountry(extension2, c)">
+                                        <img [src]="flagUrl(c.iso2)" alt="">
+                                        <span class="country-name">{{ c.name }}</span>
+                                        <span class="country-dial">+{{ c.dial }}</span>
+                                    </div>
+                                    <div class="country-empty" *ngIf="filteredCountries().length === 0">No countries
+                                        found</div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Enter extension" #ext2Input [(ngModel)]="extension2.number"
+                                (ngModelChange)="onPhoneNumberInput(extension2, $event, ext2Input)" name="ext2number">
+                        </div>
+                    </div>
+                    <p class="phone-error" *ngIf="!isPhoneValid(extension2)">Invalid number length for +{{
+                        extension2.code }}</p>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Home Phone</label>
+                        <div class="field-input phone">
+                            <button type="button" class="country-select" (click)="toggleDropdown('home')">
+                                <img *ngIf="homePhone.iso2" [src]="flagUrl(homePhone.iso2)" alt="">
+                                <span class="dial">{{ homePhone.code ? '+' + homePhone.code : 'Code' }}</span>
+                                <i class="bi bi-chevron-down chevron-sm"
+                                    [class.rotated]="openDropdown() === 'home'"></i>
+                            </button>
+                            <div class="country-dropdown" *ngIf="openDropdown() === 'home'"
+                                (click)="$event.stopPropagation()">
+                                <div class="country-search-wrap">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="country-search-input" [ngModel]="countrySearch()"
+                                        (ngModelChange)="countrySearch.set($event)" name="search-home"
+                                        placeholder="Search country or code…">
+                                </div>
+                                <div class="country-list">
+                                    <div class="country-option" *ngFor="let c of filteredCountries()"
+                                        (click)="selectCountry(homePhone, c)">
+                                        <img [src]="flagUrl(c.iso2)" alt="">
+                                        <span class="country-name">{{ c.name }}</span>
+                                        <span class="country-dial">+{{ c.dial }}</span>
+                                    </div>
+                                    <div class="country-empty" *ngIf="filteredCountries().length === 0">No countries
+                                        found</div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Enter home phone" [(ngModel)]="homePhone.number"
+                                (ngModelChange)="onPhoneNumberInput(homePhone, $event, homePhoneInput)"
+                                name="homenumber" #homePhoneInput>
+                        </div>
+                    </div>
+                    <p class="phone-error" *ngIf="!isPhoneValid(homePhone)">Invalid number length for +{{ homePhone.code
+                        }}</p>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Fax</label>
+                        <div class="field-input phone">
+                            <button type="button" class="country-select" (click)="toggleDropdown('fax')">
+                                <img *ngIf="fax.iso2" [src]="flagUrl(fax.iso2)" alt="">
+                                <span class="dial">{{ fax.code ? '+' + fax.code : 'Code' }}</span>
+                                <i class="bi bi-chevron-down chevron-sm" [class.rotated]="openDropdown() === 'fax'"></i>
+                            </button>
+                            <div class="country-dropdown" *ngIf="openDropdown() === 'fax'"
+                                (click)="$event.stopPropagation()">
+                                <div class="country-search-wrap">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="country-search-input" [ngModel]="countrySearch()"
+                                        (ngModelChange)="countrySearch.set($event)" name="search-fax"
+                                        placeholder="Search country or code…">
+                                </div>
+                                <div class="country-list">
+                                    <div class="country-option" *ngFor="let c of filteredCountries()"
+                                        (click)="selectCountry(fax, c)">
+                                        <img [src]="flagUrl(c.iso2)" alt="">
+                                        <span class="country-name">{{ c.name }}</span>
+                                        <span class="country-dial">+{{ c.dial }}</span>
+                                    </div>
+                                    <div class="country-empty" *ngIf="filteredCountries().length === 0">No countries
+                                        found</div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Enter fax number" [(ngModel)]="fax.number"
+                                (ngModelChange)="onPhoneNumberInput(fax, $event, faxNumberInput)" name="faxnumber"
+                                #faxNumberInput>
+                        </div>
+                    </div>
+                    <p class="phone-error" *ngIf="!isPhoneValid(fax)">Invalid number length for +{{ fax.code }}</p>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Mobile Number</label>
+                        <div class="field-input phone">
+                            <button type="button" class="country-select" (click)="toggleDropdown('mobile')">
+                                <img *ngIf="mobileNo.iso2" [src]="flagUrl(mobileNo.iso2)" alt="">
+                                <span class="dial">{{ mobileNo.code ? '+' + mobileNo.code : 'Code' }}</span>
+                                <i class="bi bi-chevron-down chevron-sm"
+                                    [class.rotated]="openDropdown() === 'mobile'"></i>
+                            </button>
+                            <div class="country-dropdown" *ngIf="openDropdown() === 'mobile'"
+                                (click)="$event.stopPropagation()">
+                                <div class="country-search-wrap">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="country-search-input" [ngModel]="countrySearch()"
+                                        (ngModelChange)="countrySearch.set($event)" name="search-mobile"
+                                        placeholder="Search country or code…">
+                                </div>
+                                <div class="country-list">
+                                    <div class="country-option" *ngFor="let c of filteredCountries()"
+                                        (click)="selectCountry(mobileNo, c)">
+                                        <img [src]="flagUrl(c.iso2)" alt="">
+                                        <span class="country-name">{{ c.name }}</span>
+                                        <span class="country-dial">+{{ c.dial }}</span>
+                                    </div>
+                                    <div class="country-empty" *ngIf="filteredCountries().length === 0">No countries
+                                        found</div>
+                                </div>
+                            </div>
+                            <input type="text" placeholder="Enter mobile number" [(ngModel)]="mobileNo.number"
+                                name="mobilenumber"
+                                (ngModelChange)="onPhoneNumberInput(mobileNo, $event, mobileNoInput)" #mobileNoInput>
+                        </div>
+                    </div>
+                    <p class="phone-error" *ngIf="!isPhoneValid(mobileNo)">Invalid number length for +{{ mobileNo.code
+                        }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03 ORGANIZATION -->
+        <div class="section-card">
+            <div class="d-flex gap-3 align-items-start">
+                <div class="icon-circle">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+                <div class="header-copy">
+                    <div class="title-row"><span class="step-no">03</span>
+                        <h3>Organization</h3>
+                    </div>
+                    <p>Employee organizational information</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
+                <div class="col">
+                    <div class="field">
+                        <label>Designation</label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-person-workspace"></i>
+                            </span>
+                            <input type="text" placeholder="Enter designation" [ngModel]="designation()"
+                                (ngModelChange)="designation.set($event)" name="designation">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Office</label>
+                        <div class="field-input select-wrap">
+                            <span class="icon-box">
+                                <i class="bi bi-building"></i>
+                            </span>
+                            <button type="button" class="office-select" (click)="toggleOfficeDropdown()">
+                                <span class="office-value">{{ office() || 'Select office' }}</span>
+                                <i class="bi bi-chevron-down chevron-sm"
+                                    [class.rotated]="openDropdown() === 'office'"></i>
+                            </button>
+                            <div class="country-dropdown office-dropdown" *ngIf="openDropdown() === 'office'"
+                                (click)="$event.stopPropagation()">
+                                <div class="country-search-wrap">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" class="country-search-input office-search-input"
+                                        [ngModel]="officeSearch()" (ngModelChange)="officeSearch.set($event)"
+                                        name="search-office" placeholder="Search office…">
+                                </div>
+                                <div class="country-list">
+                                    <div class="country-option" *ngFor="let o of filteredOffices()"
+                                        (click)="selectOffice(o)">
+                                        <span class="country-name">{{ o }}</span>
+                                    </div>
+                                    <div class="country-empty" *ngIf="filteredOffices().length === 0">No offices found
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
+                <div class="col">
+                    <div class="field">
+                        <label>Section</label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-database"></i>
+                            </span>
+                            <input type="text" placeholder="Enter section" [ngModel]="section()"
+                                (ngModelChange)="section.set($event)" name="section">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Cost Center</label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-cash-stack"></i>
+                            </span>
+                            <input type="text" placeholder="Enter cost center" [ngModel]="costCenter()"
+                                (ngModelChange)="costCenter.set($event)" name="costCenter">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Department</label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-building-gear"></i>
+                            </span>
+                            <input type="text" placeholder="Enter department" [ngModel]="department()"
+                                (ngModelChange)="department.set($event)" name="department">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>Division</label>
+                        <div class="field-input">
+                            <span class="icon-box">
+                                <i class="bi bi-signpost-2"></i>
+                            </span>
+                            <input type="text" placeholder="Enter division" [ngModel]="division()"
+                                (ngModelChange)="division.set($event)" name="division">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04 ADDRESS INFORMATION -->
+        <div class="section-card">
+            <div class="d-flex gap-3 align-items-start">
+                <div class="icon-circle">
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+                <div class="header-copy">
+                    <div class="title-row"><span class="step-no">04</span>
+                        <h3>Address Information</h3>
+                    </div>
+                    <p>Employee address details</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+                <div class="col">
+                    <div class="field">
+                        <label>Permanent Address</label>
+                        <div class="field-input textarea-wrap">
+                            <span class="icon-box top">
+                                <i class="bi bi-house"></i>
+                            </span>
+                            <textarea placeholder="Enter permanent address" [ngModel]="permanentAddress()"
+                                (ngModelChange)="onPermanentAddressChange($event)" name="permanentAddress"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="field">
+                        <label>GAL Address</label>
+                        <div class="field-input textarea-wrap">
+                            <span class="icon-box top">
+                                <i class="bi bi-geo"></i>
+                            </span>
+                            <textarea placeholder="Enter Global Address List address" [ngModel]="galAddress()"
+                                (ngModelChange)="galAddress.set($event)" [disabled]="useAboveAsGal()"
+                                name="galAddress"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label class="checkbox-row">
+                <input type="checkbox" [ngModel]="useAboveAsGal()" (ngModelChange)="onUseAboveAsGalChange($event)"
+                    name="sameAddr">
+                Use permanent address as GAL address
+            </label>
+        </div>
+
+        <!-- ACTION BAR -->
+        <div
+            class="d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-3">
+            <p class="required-legend order-2 order-sm-1"><span class="req">*</span> Required fields</p>
+            <div class="d-flex flex-column flex-sm-row gap-2 order-1 order-sm-2">
+                <button type="button" class="btn-ghost" (click)="reset()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Reset
+                </button>
+                <button type="submit" class="btn-primary">
+                    <i class="bi bi-floppy"></i>
+                    Save Changes
+                </button>
+
+            </div>
+        </div>
+    </form>
+
+    <div class="dropdown-backdrop" *ngIf="openDropdown()" (click)="closeDropdown()"></div>
+
+    <!-- PAGE FOOTER -->
+    <footer class="page-footer d-flex justify-content-center align-items-center text-center">
+        <p class="mb-0">Copyright &copy; 2026 SriLankan Airlines. All rights reserved.</p>
+    </footer>
+
+</div>
