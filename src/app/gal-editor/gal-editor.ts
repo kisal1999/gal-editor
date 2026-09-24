@@ -156,6 +156,22 @@ export class GalEditorComponent {
     return this.offices.filter(o => o.toLowerCase().includes(q));
   });
 
+  toggleOfficeDropdown(): void {
+    const opening = this.openDropdown() !== 'office';
+    this.openDropdown.set(opening ? 'office' : null);
+    this.officeSearch.set('');
+    if (opening) {
+      setTimeout(() => {
+        document.querySelector<HTMLInputElement>('.office-dropdown .office-search-input')?.focus();
+      }, 50);
+    }
+  }
+
+  selectOffice(o: string): void {
+    this.office.set(o);
+    this.closeDropdown();
+  }
+
   private buildCountries(): Country[] {
     const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
     return getCountries()
@@ -181,13 +197,6 @@ export class GalEditorComponent {
     );
   });
 
-  avatarInitials = computed(() => {
-    const parts = this.displayName().trim().split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return '—';
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  });
-
   flagUrl(iso2: string): string {
     return `https://flagcdn.com/w20/${iso2}.png`;
   }
@@ -206,22 +215,6 @@ export class GalEditorComponent {
   closeDropdown(): void {
     this.openDropdown.set(null);
     this.countrySearch.set('');
-  }
-
-  toggleOfficeDropdown(): void {
-    const opening = this.openDropdown() !== 'office';
-    this.openDropdown.set(opening ? 'office' : null);
-    this.officeSearch.set('');
-    if (opening) {
-      setTimeout(() => {
-        document.querySelector<HTMLInputElement>('.office-dropdown .office-search-input')?.focus();
-      }, 50);
-    }
-  }
-
-  selectOffice(o: string): void {
-    this.office.set(o);
-    this.closeDropdown();
   }
 
   selectCountry(field: PhoneField, country: Country): void {
